@@ -5,6 +5,8 @@
 ########################
 common() {
               mkdir -p /home/ubuntu/boundary
+              chown ubuntu /home/ubuntu/boundary
+              chgrp ubuntu /home/ubuntu/boundary
               echo "${priv_key}" >> /home/ubuntu/.ssh/id_rsa
               chown ubuntu /home/ubuntu/.ssh/id_rsa
               chgrp ubuntu /home/ubuntu/.ssh/id_rsa
