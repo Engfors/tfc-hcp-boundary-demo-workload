@@ -25,7 +25,7 @@ listener "tcp" {
   purpose = "proxy"
 }
 
-hcp_boundary_cluster_id = ` echo ${boundary_cluster_addr}` 
+hcp_boundary_cluster_id = ` echo ${boundary_cluster_addr} | cut -c 9- | cut -d . -f 1` 
 
 worker {
   public_addr = $(public_ip)
