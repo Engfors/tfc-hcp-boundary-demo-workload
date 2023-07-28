@@ -1,5 +1,5 @@
 data "template_file" "worker" {
-  count = 1
+  #count = 1
   template = (join("\n", tolist([
     file("${path.root}/templates/base.sh"),
     file("${path.root}/templates/worker.sh")
@@ -12,12 +12,13 @@ data "template_file" "worker" {
 }
 
 data "template_cloudinit_config" "worker" {
-  count         = 1
+  #count         = 1
   gzip          = true
   base64_encode = true
   part {
     content_type = "text/x-shellscript"
-    content      = element(data.template_file.worker.*.rendered, count.index)
+    #content      = element(data.template_file.worker.*.rendered, count.index)
+    content      = data.template_file.worker.*.rendered
   }
 }
 
@@ -31,7 +32,8 @@ resource "aws_instance" "bastionhost" {
   associate_public_ip_address = "true"
   vpc_security_group_ids      = [aws_security_group.bastionhost.id]
   key_name                    = var.pub_key
-  user_data = element(data.template_cloudinit_config.worker.*.rendered, count.index)
+  #user_data = element(data.template_cloudinit_config.worker.*.rendered, count.index)
+  user_data = data.template_cloudinit_config.worker.*.rendered
 
   tags = {
     Name        = "bastionhost-${var.name}"
