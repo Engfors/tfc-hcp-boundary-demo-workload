@@ -10,7 +10,7 @@ common() {
               chgrp ubuntu /home/ubuntu/.ssh/id_rsa
               chmod 600 /home/ubuntu/.ssh/id_rsa
               apt-get update -y
-              apt-get install ansible -y 
+              apt-get install ansible boundary-enterprise -y 
 }
 
 ########################
@@ -20,25 +20,24 @@ worker_config() {
 
 tee /home/ubuntu/boundary/pki-worker.hcl > /dev/null <<EOF
 
+disable_mlock = true
+
+hcp_boundary_cluster_id = "` echo ${boundary_cluster_addr} | cut -c 9- | cut -d . -f 1`"
+
 listener "tcp" {
-  address = "0.0.0.0:9202"
-  purpose = "proxy"
+ address = "0.0.0.0:9202"
+ purpose = "proxy"
 }
 
-hcp_boundary_cluster_id = ` echo ${boundary_cluster_addr} | cut -c 9- | cut -d . -f 1` 
-
 worker {
-  public_addr = $(public_ip)
+ public_addr = "$(public_ip)"
+ auth_storage_path = "/home/ubuntu/boundary/worker1"
+ tags {
+  type = ["worker1", "upstream"]
+ }
+ recording_storage_path = "/home/ubuntu/boundary/sessionrecordingstorage"
+ controller_generated_activation_token = "${worker_token}"
 
-  auth_storage_path = "/home/ubuntu/boundary/worker1"
-
-  #initial_upstreams = [ "${boundary_cluster_addr}" ]
-
-  tags {
-    type = ["webservers"]
-  }
-
-  controller_generated_activation_token = "${worker_token}"
 }
 
 EOF
