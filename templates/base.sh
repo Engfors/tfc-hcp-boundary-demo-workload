@@ -16,22 +16,8 @@ apt-get -y update
 
 echo "--> Installing common dependencies"
 apt-get -y install \
-  unzip ntp dnsmasq dnsmasq-base dnsutils jq
+  unzip ntp jq
 
-echo "--> Setting hostname..."
-echo "${node_name}" | sudo tee /etc/hostname
-sudo hostname -F /etc/hostname
-
-echo "--> Adding hostname to /etc/hosts"
-sudo tee -a /etc/hosts > /dev/null <<EOF
-# For local resolution
-$(private_ip)  ${node_name} ${node_name}.node.consul
-EOF
-
-systemctl enable ntp.service
-systemctl start ntp.service
-systemctl enable dnsmasq
-systemctl restart dnsmasq
 
 
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
