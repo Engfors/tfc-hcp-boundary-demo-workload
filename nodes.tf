@@ -24,7 +24,6 @@ data "template_cloudinit_config" "worker" {
 # INSTANCES
 
 resource "aws_instance" "bastionhost" {
-  count = 1
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.dmz_subnet.id
