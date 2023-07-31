@@ -2,6 +2,8 @@ locals {
   priv_key = base64decode(var.pri_key)
   boundary_cluster_addr = data.terraform_remote_state.boundary.outputs.boundary_cluster
   worker_token          = data.terraform_remote_state.boundary.outputs.activation_token
+  demo_org_id           = data.terraform_remote_state.boundary.outputs.demo_org_id
+  demo_project_id       = data.terraform_remote_state.boundary.outputs.demo_project_id
 }
 
 

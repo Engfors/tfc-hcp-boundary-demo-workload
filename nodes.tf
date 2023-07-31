@@ -55,6 +55,66 @@ resource "aws_instance" "web_nodes" {
   }
 }
 
+
+resource "boundary_host_catalog_static" "catalog" {
+  name        = "server-catalog"
+  description = "My webnodes catalog"
+  scope_id    = local.demo_org_id
+  }
+
+resource "boundary_host_set_static" "set" {
+  type            = "static"
+  name            = "server-host-set"
+  host_catalog_id = boundary_host_catalog_static.catalog.id
+  host_ids = boundary_host_static.servers.*.id
+}
+resource "boundary_host_static" "servers" {
+  count           = var.web_node_count
+  type            = "static"
+  #name            = "web-${count.index}"
+  name            = aws_instance.web_nodes.*.tags[count.index]["Name"]
+  host_catalog_id = boundary_host_catalog_static.catalog.id
+  address         = element(aws_instance.web_nodes.*.private_ip, count.index)
+}
+
+resource "boundary_target" "ssh_hosts" {
+  name                                       = "ssh-injection-upcloud"
+  description                                = "Ssh targets"
+  type                                       = "ssh"
+  default_port                               = "22"
+  scope_id                                   = local.demo_project_id
+  ingress_worker_filter                      = "\"worker1\" in \"/tags/type\""
+  enable_session_recording                   = false
+  #storage_bucket_id                          = boundary_storage_bucket.session-storage.id
+  host_source_ids                            = [
+    boundary_host_set_static.set.id
+  ]
+  injected_application_credential_source_ids = [
+    boundary_credential_ssh_private_key.example.id
+  ]
+}
+
+
+
+resource "boundary_credential_store_static" "example" {
+  name        = "example_static_credential_store"
+  description = "My first static credential store!"
+  scope_id    = local.demo_project_id
+}
+
+resource "boundary_credential_ssh_private_key" "example" {
+  name                   = "example_ssh_private_key"
+  description            = "My first ssh private key credential!"
+  credential_store_id    = boundary_credential_store_static.example.id
+  username               = "ubuntu"
+  private_key            = local.priv_key
+  #private_key            =  file("~/.ssh/id_rsa") # change to valid SSH Private Key
+  #private_key_passphrase = "optional-passphrase" # change to the passphrase of the Private Key if required
+}
+
+
+
+
 # resource "aws_instance" "api_nodes" {
 #   count                       = var.api_node_count
 #   ami                         = data.aws_ami.ubuntu.id
