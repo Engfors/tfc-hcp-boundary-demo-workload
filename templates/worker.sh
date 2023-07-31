@@ -43,6 +43,15 @@ worker {
 }
 
 EOF
+
+chown ubuntu /home/ubuntu/boundary/pki-worker.hcl
+chgrp ubuntu /home/ubuntu/boundary/pki-worker.hcl
+
+
+}
+
+worker_start() {
+  boundary server -config /home/ubuntu/boundary/pki-worker.hcl
 }
 
 ####################
@@ -51,3 +60,4 @@ EOF
 
 common
 worker_config
+worker_start
