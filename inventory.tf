@@ -136,11 +136,11 @@ resource "null_resource" "ansible_run" {
     insecure    = true
   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "echo 'ssh is up...'",
-      "sleep 60 && ansible-playbook -i /home/ubuntu/inventory /home/ubuntu/ansible/playbook.yml ",
-    ]
-  }
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "echo 'ssh is up...'",
+  #     "sleep 60 && ansible-playbook -i /home/ubuntu/inventory /home/ubuntu/ansible/playbook.yml ",
+  #   ]
+  # }
 }
 
