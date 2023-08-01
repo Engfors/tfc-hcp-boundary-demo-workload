@@ -112,35 +112,35 @@ resource "null_resource" "cp_ansible" {
 ##
 ## here we trigger the execution of the Ansible Playbook automatically with every Terraform run
 ##
-resource "null_resource" "ansible_run" {
-  depends_on = [
-    null_resource.cp_ansible,
-    null_resource.provisioner,
-    aws_instance.web_nodes,
-    aws_route53_record.bastionhost,
-    aws_route53_record.elb,
-    aws_route_table.rtb-nat,
-    #aws_instance.nat
-  ]
-    #local_file.ansible_inventory,
+# resource "null_resource" "ansible_run" {
+#   depends_on = [
+#     null_resource.cp_ansible,
+#     null_resource.provisioner,
+#     aws_instance.web_nodes,
+#     aws_route53_record.bastionhost,
+#     aws_route53_record.elb,
+#     aws_route_table.rtb-nat,
+#     #aws_instance.nat
+#   ]
+#     #local_file.ansible_inventory,
     
-  triggers = {
-    always_run = timestamp()
-  }
+#   triggers = {
+#     always_run = timestamp()
+#   }
 
-  connection {
-    type        = "ssh"
-    host        = aws_instance.bastionhost.public_ip
-    user        = var.ssh_user
-    private_key = local.priv_key
-    insecure    = true
-  }
+#   connection {
+#     type        = "ssh"
+#     host        = aws_instance.bastionhost.public_ip
+#     user        = var.ssh_user
+#     private_key = local.priv_key
+#     insecure    = true
+#   }
 
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "echo 'ssh is up...'",
-  #     "sleep 60 && ansible-playbook -i /home/ubuntu/inventory /home/ubuntu/ansible/playbook.yml ",
-  #   ]
-  # }
-}
+#   provisioner "remote-exec" {
+#     inline = [
+#       "echo 'ssh is up...'",
+#       "sleep 60 && ansible-playbook -i /home/ubuntu/inventory /home/ubuntu/ansible/playbook.yml ",
+#     ]
+#   }
+# }
 
