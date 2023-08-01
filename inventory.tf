@@ -88,26 +88,26 @@ resource "null_resource" "provisioner" {
 ##
 ## here we copy the Ansible Playbook to the Bastionhost
 ##
-resource "null_resource" "cp_ansible" {
-  depends_on = [null_resource.provisioner]
+# resource "null_resource" "cp_ansible" {
+#   depends_on = [null_resource.provisioner]
 
-  triggers = {
-    always_run = timestamp()
-  }
+#   triggers = {
+#     always_run = timestamp()
+#   }
 
-  provisioner "file" {
-    source      = "${path.root}/ansible"
-    destination = "/home/ubuntu"
+#   provisioner "file" {
+#     source      = "${path.root}/ansible"
+#     destination = "/home/ubuntu"
 
-    connection {
-      type        = "ssh"
-      host        = aws_instance.bastionhost.public_ip
-      user        = var.ssh_user
-      private_key = local.priv_key
-      insecure    = true
-    }
-  }
-}
+#     connection {
+#       type        = "ssh"
+#       host        = aws_instance.bastionhost.public_ip
+#       user        = var.ssh_user
+#       private_key = local.priv_key
+#       insecure    = true
+#     }
+#   }
+# }
 
 ##
 ## here we trigger the execution of the Ansible Playbook automatically with every Terraform run
