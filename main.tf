@@ -13,7 +13,7 @@ provider "boundary" {
   addr                   = local.boundary_cluster_addr
   auth_method_login_name = var.org_username
   auth_method_password   = var.org_password
-  scope_id               = data.terraform_remote_state.boundary.outputs.demo_project_id 
+  scope_id               = data.terraform_remote_state.boundary.outputs.demo_org_id 
 }
 
 
