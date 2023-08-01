@@ -57,14 +57,14 @@ resource "aws_instance" "web_nodes" {
 
 
 resource "boundary_host_catalog_static" "catalog" {
-  name        = "server-catalog"
+  name        = "webnodes-catalog"
   description = "My webnodes catalog"
   scope_id    = local.demo_project_id
   }
 
 resource "boundary_host_set_static" "set" {
   type            = "static"
-  name            = "server-host-set"
+  name            = "webnodes-host-set"
   host_catalog_id = boundary_host_catalog_static.catalog.id
   host_ids = boundary_host_static.servers.*.id
 }
@@ -78,8 +78,8 @@ resource "boundary_host_static" "servers" {
 }
 
 resource "boundary_target" "ssh_hosts" {
-  name                                       = "ssh-injection-upcloud"
-  description                                = "Ssh targets"
+  name                                       = "ssh-injection-webnodes"
+  description                                = "ssh targets"
   type                                       = "ssh"
   default_port                               = "22"
   scope_id                                   = local.demo_project_id
