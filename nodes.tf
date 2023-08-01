@@ -5,7 +5,7 @@ data "template_file" "worker" {
     file("${path.root}/templates/worker.sh")
   ])))
   vars = {
-    priv_key              = var.pri_key
+    priv_key              = local.priv_key
     boundary_cluster_addr = local.boundary_cluster_addr
     worker_token          = local.worker_token
   }
