@@ -173,52 +173,52 @@ resource "aws_subnet" "web_subnet" {
 
 
 
-# LOAD BALANCER #
-resource "aws_elb" "web-elb" {
-  name = "web-elb"
+# # LOAD BALANCER #
+# resource "aws_elb" "web-elb" {
+#   name = "web-elb"
 
-  tags = {
-    Name        = "web-elb"
-  }
+#   tags = {
+#     Name        = "web-elb"
+#   }
 
-  subnets         = aws_subnet.pub_web_subnet.*.id
-  security_groups = [aws_security_group.elb.id]
-  instances       = aws_instance.web_nodes.*.id
+#   subnets         = aws_subnet.pub_web_subnet.*.id
+#   security_groups = [aws_security_group.elb.id]
+#   instances       = aws_instance.web_nodes.*.id
 
-  listener {
-    instance_port     = 80
-    instance_protocol = "http"
-    lb_port           = 80
-    lb_protocol       = "http"
-  }
-}
-
-
-# DNS
-
-data "aws_route53_zone" "selected" {
-  name         = "${var.dns_domain}."
-  private_zone = false
-}
-
-resource "aws_route53_record" "bastionhost" {
-  zone_id = data.aws_route53_zone.selected.zone_id
-  name    = lookup(aws_instance.bastionhost.*.tags[0], "Name")
-  #name    = "bastionhost"
-  type    = "A"
-  ttl     = "300"
-  records = [aws_instance.bastionhost.public_ip]
-}
+#   listener {
+#     instance_port     = 80
+#     instance_protocol = "http"
+#     lb_port           = 80
+#     lb_protocol       = "http"
+#   }
+# }
 
 
-resource "aws_route53_record" "elb" {
-  zone_id = data.aws_route53_zone.selected.zone_id
-#  name    = "${var.name}.data.aws_route53_zone.selected.name"
-  name    = var.name
-  type    = "CNAME"
-  ttl     = "300"
-  records = [aws_elb.web-elb.dns_name]
-}
+# # DNS
+
+# data "aws_route53_zone" "selected" {
+#   name         = "${var.dns_domain}."
+#   private_zone = false
+# }
+
+# resource "aws_route53_record" "bastionhost" {
+#   zone_id = data.aws_route53_zone.selected.zone_id
+#   name    = lookup(aws_instance.bastionhost.*.tags[0], "Name")
+#   #name    = "bastionhost"
+#   type    = "A"
+#   ttl     = "300"
+#   records = [aws_instance.bastionhost.public_ip]
+# }
+
+
+# resource "aws_route53_record" "elb" {
+#   zone_id = data.aws_route53_zone.selected.zone_id
+# #  name    = "${var.name}.data.aws_route53_zone.selected.name"
+#   name    = var.name
+#   type    = "CNAME"
+#   ttl     = "300"
+#   records = [aws_elb.web-elb.dns_name]
+# }
 
 
 
@@ -302,38 +302,38 @@ resource "aws_security_group_rule" "web-egress" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group" "elb" {
-  name        = "${var.name}-elb-sg"
-  description = "elasic loadbalancer"
-  vpc_id      = aws_vpc.hashicorp_vpc.id
-}
+# resource "aws_security_group" "elb" {
+#   name        = "${var.name}-elb-sg"
+#   description = "elasic loadbalancer"
+#   vpc_id      = aws_vpc.hashicorp_vpc.id
+# }
 
-resource "aws_security_group_rule" "elb-http" {
-  security_group_id = aws_security_group.elb.id
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-}
+# resource "aws_security_group_rule" "elb-http" {
+#   security_group_id = aws_security_group.elb.id
+#   type              = "ingress"
+#   from_port         = 80
+#   to_port           = 80
+#   protocol          = "tcp"
+#   cidr_blocks       = ["0.0.0.0/0"]
+# }
 
-resource "aws_security_group_rule" "elb-htts" {
-  security_group_id = aws_security_group.elb.id
-  type              = "ingress"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-}
+# resource "aws_security_group_rule" "elb-htts" {
+#   security_group_id = aws_security_group.elb.id
+#   type              = "ingress"
+#   from_port         = 443
+#   to_port           = 443
+#   protocol          = "tcp"
+#   cidr_blocks       = ["0.0.0.0/0"]
+# }
 
-resource "aws_security_group_rule" "elb-egress" {
-  security_group_id = aws_security_group.elb.id
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-}
+# resource "aws_security_group_rule" "elb-egress" {
+#   security_group_id = aws_security_group.elb.id
+#   type              = "egress"
+#   from_port         = 0
+#   to_port           = 0
+#   protocol          = "-1"
+#   cidr_blocks       = ["0.0.0.0/0"]
+# }
 
 resource "aws_security_group" "nat" {
   name        = "${var.name}-nat-sg"
