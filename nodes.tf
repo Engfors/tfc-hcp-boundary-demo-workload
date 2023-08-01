@@ -59,7 +59,7 @@ resource "aws_instance" "web_nodes" {
 resource "boundary_host_catalog_static" "catalog" {
   name        = "server-catalog"
   description = "My webnodes catalog"
-  scope_id    = "p_AEk9RHfWtJ"
+  scope_id    = local.demo_project_id
   }
 
 resource "boundary_host_set_static" "set" {
@@ -99,7 +99,7 @@ resource "boundary_target" "ssh_hosts" {
 resource "boundary_credential_store_static" "example" {
   name        = "example_static_credential_store"
   description = "My first static credential store!"
-  scope_id    = "p_AEk9RHfWtJ"
+  scope_id    = local.demo_project_id
 }
 
 resource "boundary_credential_ssh_private_key" "example" {
